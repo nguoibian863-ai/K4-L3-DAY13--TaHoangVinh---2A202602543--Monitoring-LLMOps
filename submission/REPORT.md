@@ -8,7 +8,7 @@
 - **MSSV:** 2A202602543
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/nguoibian863-ai/K4-L3-DAY13--TaHoangVinh---2A202602543--Monitoring-LLMOps
-- **Commit SHA cuối:** `5f5f555c040c291870d34062e0d73c1e67a112b4`
+- **Commit SHA cuối:** `565d556d5d5690d7e1dd5b5665ed3962c6d8cfa7`
 - **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (Cohort K4, seed 1311, feature: `monitoring`)
 - **Tên project Langfuse cá nhân:** `day13-k4-l3a-2A202602543` (Project ID: `cmumdr2aa20yrad0d9djqhuc4`)
 
