@@ -8,7 +8,7 @@
 - **MSSV:** 2A202602543
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/nguoibian863-ai/K4-L3-DAY13--TaHoangVinh---2A202602543--Monitoring-LLMOps
-- **Commit SHA cuối:** `9f71b0013108eb4df16a47eab80dbdb21e576c59`
+- **Commit SHA cuối:** `b1bea23dffaaa8764e3c4449e6638fea6889e8cd`
 - **Challenge ID:** Kịch bản thực hành `rag_slow` (chờ file challenge riêng từ Lab Coach)
 - **Tên project Langfuse cá nhân:** `day13-k4-l3a-2A202602543` (Project ID: `cmumdr2aa20yrad0d9djqhuc4`)
 
