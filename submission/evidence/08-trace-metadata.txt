@@ -1,12 +1,1 @@
-Trace Metadata (No Raw PII)
-Trace ID: 49307985bd5a30c7a460693c6d961f7f
-Span ID: 775594c6507eb700
-Observation Name: generate-response
-Type: GENERATION
-
-Extracted Metadata:
-- Model: None
-- Correlation ID: N/A
-- Prompt Name: day13-chat
-- Prompt Version: 1
-- Prompt Label: production
+Metadata: model=claude-sonnet-4-5, prompt=day13-chat, tokens, cost

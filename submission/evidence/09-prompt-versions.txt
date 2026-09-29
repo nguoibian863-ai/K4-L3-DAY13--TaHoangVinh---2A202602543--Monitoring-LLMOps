@@ -1,18 +1,1 @@
-Prompt Management in Langfuse
-Prompt Name: day13-chat
-
-Version 1:
-- Labels: ['baseline', 'production']
-- Text:
-Feature={{feature}}
-Docs={{docs}}
-Question={{message}}
-Please provide a clear and concise answer.
-
-Version 2:
-- Labels: ['candidate', 'latest']
-- Text:
-Feature={{feature}}
-Docs={{docs}}
-Question={{message}}
-Please provide a detailed, bulleted answer based on the reference docs.
+Prompt Versions: v1 (production, baseline), v2 (candidate)

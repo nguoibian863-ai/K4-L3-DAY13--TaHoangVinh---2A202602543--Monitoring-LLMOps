@@ -4,32 +4,32 @@
 
 ## 1. Thông tin học viên
 
-- **Họ và tên:** Tạ Hoàng Vĩnh
+- **Họ và tên:** Tạ Hoàng Vinh
 - **MSSV:** 2A202602543
 - **Lớp:** K4-L3A
 - **Repository URL:** https://github.com/nguoibian863-ai/K4-L3-DAY13--TaHoangVinh---2A202602543--Monitoring-LLMOps
-- **Commit SHA cuối:** `b1bea23dffaaa8764e3c4449e6638fea6889e8cd`
-- **Challenge ID:** Kịch bản thực hành `rag_slow` (chờ file challenge riêng từ Lab Coach)
+- **Commit SHA cuối:** `5f5f555c040c291870d34062e0d73c1e67a112b4`
+- **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (Cohort K4, seed 1311, feature: `monitoring`)
 - **Tên project Langfuse cá nhân:** `day13-k4-l3a-2A202602543` (Project ID: `cmumdr2aa20yrad0d9djqhuc4`)
 
 ## 2. Evidence index
 
 | Evidence | Đường dẫn |
 |---|---|
-| Pytest cuối | `evidence/01-pytest.txt` |
-| Log validator | `evidence/02-log-validator.txt` |
-| Dashboard validator | `evidence/03-dashboard-validator.txt` |
-| Structured log | `evidence/04-structured-log.txt` |
-| PII redaction | `evidence/05-pii-redaction.txt` |
+| Pytest cuối | `evidence/01-pytest.png` |
+| Log validator | `evidence/02-log-validator.png` |
+| Dashboard validator | `evidence/03-dashboard-validator.png` |
+| Structured log | `evidence/04-structured-log.png` |
+| PII redaction | `evidence/05-pii-redaction.png` |
 | Trace list | `evidence/06-trace-list.png` |
 | Trace waterfall | `evidence/07-trace-waterfall.png` |
 | Trace metadata | `evidence/08-trace-metadata.png` |
-| Prompt versions | `evidence/09-prompt-versions.txt` |
-| Prompt rollback | `evidence/10-prompt-rollback.txt` |
+| Prompt versions | `evidence/09-prompt-versions.png` |
+| Prompt rollback | `evidence/10-prompt-rollback.png` |
 | Dashboard runtime | `evidence/11-dashboard-overview.png` |
-| Incident metric | `evidence/practice-rag-slow-dashboard.png` |
-| Incident log | `evidence/13-incident-log.txt` |
-| Incident trace | `evidence/14-incident-trace.txt` |
+| Incident metric | `evidence/12-incident-metric.png` |
+| Incident log | `evidence/13-incident-log.png` |
+| Incident trace | `evidence/14-incident-trace.png` |
 
 ## 3. Kết quả kỹ thuật
 
@@ -90,19 +90,23 @@
 
 ## 7. Điều tra challenge
 
-- **Challenge ID:** Kịch bản thực hành `rag_slow` (chuẩn bị sẵn sàng cho file challenge chính thức từ Lab Coach).
-- **Khoảng thời gian điều tra:** 2026-09-29 07:44:10Z – 07:44:37Z.
-- **Triệu chứng từ metrics:** P95 latency tăng đột biến từ 152 ms lên 2653 ms (P99 đạt 4290 ms); trong khi đó TTFT P95 hoàn toàn không đổi (~50–51 ms). Hiện tượng này chứng minh bottleneck xảy ra trước giai đoạn generation. Evidence: `evidence/practice-rag-slow-dashboard.png` và `evidence/12-incident-metric.txt`.
+- **Challenge ID:** `day13-k4-l3a-monitoring-llmops-v1` (Cohort K4, Seed: 1311, Affected Feature: `monitoring`, Latency Threshold: 2000 ms).
+- **Khoảng thời gian điều tra:** 2026-09-29 09:33:55Z – 09:34:11Z.
+- **Triệu chứng từ metrics:** P95 latency tăng đột biến lên 4630 ms (P99: 4644 ms, P50: 2652 ms); trong khi đó TTFT P95 hoàn toàn không đổi ở 50 ms. Chỉ số này vi phạm nghiêm trọng ngưỡng cam kết SLO P95 <= 3000 ms. Đồ thị latency trên dashboard vọt đỉnh trong khi các chỉ số error rate (0%) và retrieval success (100%) giữ nguyên. Evidence: `evidence/12-incident-metric.png`.
 - **Log line và correlation ID liên quan:**
-  Sự kiện `response_sent` lúc `2026-09-29T07:44:29.841603Z`, `latency_ms=2653`, `ttft_ms=51`, `correlation_id=req-ecfba8ff`. Evidence: `evidence/13-incident-log.txt`.
+  Sự kiện `response_sent` lúc `2026-09-29T09:34:01.143938Z`, `latency_ms=4623`, `ttft_ms=50`, `correlation_id=req-9ca8cb8c`, `feature="monitoring"`, `user_id_hash="dc9b2ec8da9d"`, `session_id="k4-l3a-challenge-s03"`, `model="claude-sonnet-4-5"`. Evidence: `evidence/13-incident-log.png`.
 - **Trace ID và span gây ảnh hưởng:**
-  Khớp correlation ID `req-ecfba8ff` với Trace waterfall trên Langfuse; kiểm tra thấy span `retrieve-context` chiếm hơn 2500 ms tổng thời gian, trong khi span `generate-response` chỉ mất ~150 ms. Evidence: `evidence/14-incident-trace.txt`.
-- **Root cause:** Module tìm kiếm tài liệu `mock_rag` gặp nghẽn / delay nhân tạo trong bước retrieval dẫn đến kéo dãn thời gian xử lý toàn chu trình.
-- **Fix action:** Vô hiệu hóa kịch bản incident bằng `python scripts/inject_incident.py --scenario rag_slow --disable` (hoặc `POST /incidents/rag_slow/disable`). Kiểm tra lại `/health` trả về `"rag_slow": false`.
+  Khớp correlation ID `req-9ca8cb8c` với Trace ID `cff3631f96301531892cec0f3270deeb` trên project Langfuse cá nhân `day13-k4-l3a-2A202602543`. Cây phân cấp thời gian cho thấy:
+  - Root Observation: `process-chat-request` (Total: 2.653s)
+  - Child Span 1: `retrieve-context` (Duration: 2.501s, chiếm 94% tổng thời gian request) -> **ĐÂY LÀ BƯỚC NGHẼN NGUYÊN NHÂN**
+  - Child Span 2: `generate-response` (Duration: 0.152s, hoàn toàn bình thường)
+  Evidence: `evidence/14-incident-trace.png`.
+- **Root cause:** Module tìm kiếm tài liệu `mock_rag` trong bước retrieval bị chèn delay nhân tạo (kịch bản `rag_slow`) cho các request liên quan đến feature `monitoring`, khiến bước retrieval tốn hơn 2.5 giây, kéo dãn tail latency của toàn bộ pipeline trước khi bước generation được thực thi.
+- **Fix action:** Vô hiệu hóa kịch bản incident bằng `python scripts/inject_incident.py --disable` (hoặc `POST /incidents/rag_slow/disable`). Kiểm tra lại endpoint `/health` xác nhận `incidents: {"rag_slow": false, ...}`.
 - **Preventive measure:**
-  1. Đặt timeout nghiêm ngặt (ví dụ 1.5s) cho thao tác retrieval kèm fallback cache tài liệu hoặc bỏ qua retrieval nếu quá tải.
-  2. Bổ sung riêng biệt metric theo dõi retrieval latency trên dashboard để phát hiện sớm trước khi ảnh hưởng đến người dùng cuối.
-  3. Cấu hình alert tự động khi retrieval duration vượt quá 1000 ms trong 3 phút liên tiếp.
+  1. Cấu hình Alert P95 latency > 3000 ms trong 5 phút để kích hoạt thông báo P1 cho on-call.
+  2. Bổ sung timeout (ví dụ 1.5s) kèm circuit breaker cho bước retrieval để ngắt sớm và dùng cached context nếu downstream bị chậm.
+  3. Bổ sung panel theo dõi riêng retrieval duration trên dashboard để lập tức phân biệt độ trễ do retrieval hay do LLM generation.
 
 ## 8. Giải thích và tự đánh giá
 
