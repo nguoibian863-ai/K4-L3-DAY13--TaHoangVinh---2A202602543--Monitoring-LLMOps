@@ -7,7 +7,14 @@ primary_slo:
     total_event: 'event == "request_received"'
   target_percent: 99.5
   error_budget_percent: 0.5
-  note: Học viên phải giải thích hoặc điều chỉnh ngưỡng bằng baseline của mình.
+  error_budget_calculation:
+    allowed_bad_events: total_requests * 0.005
+    equivalent_time_budget_minutes: 201.6
+    formula: 28 days * 24 hours * 60 minutes * 0.005
+  note: >-
+    Baseline P95 is about 150 ms. The 3000 ms good-event boundary leaves room for
+    normal variance while still detecting user-visible slowness. A 99.5% target
+    permits 0.5% bad requests, equivalent to 201.6 minutes in a 28-day window.
 guardrails:
   error_rate_pct_max: 2
   daily_cost_usd_max: 2.5

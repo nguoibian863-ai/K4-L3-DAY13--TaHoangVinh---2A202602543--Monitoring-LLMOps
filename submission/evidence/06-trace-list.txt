@@ -1,0 +1,16 @@
+Langfuse Project: day13-k4-l3a-2A202602543 (ID: cmumdr2aa20yrad0d9djqhuc4)
+Base URL: https://cloud.langfuse.com
+Total Valid Traces: 11
+
+List of Traces:
+1. Trace ID: 49307985bd5a30c7a460693c6d961f7f | Spans (3): generate-response -> retrieve-context -> process-chat-request
+2. Trace ID: b1b284419abdf6fa92a1784687ec71ca | Spans (3): generate-response -> process-chat-request -> retrieve-context
+3. Trace ID: 55870a3514773b2d56feb78ff32fe84c | Spans (3): generate-response -> process-chat-request -> retrieve-context
+4. Trace ID: 7cb1f3b6f243512c0df2051ea6579115 | Spans (3): generate-response -> retrieve-context -> process-chat-request
+5. Trace ID: 60a237ecf37a10474fcf3d837ba804cf | Spans (3): generate-response -> retrieve-context -> process-chat-request
+6. Trace ID: de99264627ba782a03b7006ac5376dd9 | Spans (3): generate-response -> retrieve-context -> process-chat-request
+7. Trace ID: 55262359bd288020ec16440be3e9dbe3 | Spans (3): generate-response -> retrieve-context -> process-chat-request
+8. Trace ID: 64a8f522efb5f0f4e06d811dcc0d8f36 | Spans (3): retrieve-context -> generate-response -> process-chat-request
+9. Trace ID: 485f9a2ba729b23b448b76e35860f2b9 | Spans (2): generate-response -> process-chat-request
+10. Trace ID: 698d97a660c99636165ed59850b6cb80 | Spans (3): generate-response -> retrieve-context -> process-chat-request
+11. Trace ID: bfeff40938e4bc2c9c403f337246f2ea | Spans (3): generate-response -> retrieve-context -> process-chat-request

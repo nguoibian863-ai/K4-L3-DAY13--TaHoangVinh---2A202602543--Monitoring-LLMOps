@@ -1,0 +1,11 @@
+Prompt Rollback Evidence:
+1. Version 1 initialized with labels: ['baseline', 'production'].
+2. Version 2 created with label: ['candidate'].
+3. Promoted Version 2 to production:
+   client.update_prompt(name='day13-chat', version=2, new_labels=['candidate', 'production'])
+   Label 'production' moved to Version 2.
+4. Rollback production to Version 1:
+   client.update_prompt(name='day13-chat', version=1, new_labels=['baseline', 'production'])
+   client.update_prompt(name='day13-chat', version=2, new_labels=['candidate'])
+   Label 'production' successfully restored to Version 1.
+Verified via Langfuse prompt API and runtime resolution.

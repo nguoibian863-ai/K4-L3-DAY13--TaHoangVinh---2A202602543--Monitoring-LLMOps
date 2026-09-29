@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from . import metrics
 from .mock_llm import FakeLLM
 from .mock_rag import retrieve
-from .pii import hash_user_id, summarize_text
+from .pii import hash_user_id, scrub_text, summarize_text
 from .prompt_management import resolve_prompt
 from .tracing import get_langfuse_client, observe, propagate_attributes, tracing_enabled
 
@@ -28,7 +28,7 @@ class LabAgent:
         self.model = model
         self.llm = FakeLLM(model=model)
 
-    @observe(name="lab-agent-run", as_type="agent", capture_input=False, capture_output=False)
+    @observe(name="process-chat-request", as_type="agent", capture_input=False, capture_output=False)
     def run(
         self,
         user_id: str,
@@ -41,7 +41,7 @@ class LabAgent:
         with propagate_attributes(
             user_id=hash_user_id(user_id),
             session_id=session_id,
-            tags=["lab", feature, self.model],
+            tags=["lab", "api", feature],
             trace_name="day13-agent-request",
             environment=os.getenv("APP_ENV", "dev"),
             metadata={
@@ -50,8 +50,25 @@ class LabAgent:
                 "correlation_id": correlation_id,
             },
         ):
+            langfuse_client.update_current_span(
+                input={"message": summarize_text(message), "feature": feature},
+                metadata={
+                    "model": self.model,
+                    "correlation_id": correlation_id,
+                },
+            )
             started = time.perf_counter()
-            docs = retrieve(message)
+            with langfuse_client.start_as_current_observation(
+                name="retrieve-context",
+                as_type="retriever",
+                input={"query": summarize_text(message)},
+                metadata={"query_preview": summarize_text(message)},
+            ):
+                docs = retrieve(message)
+                langfuse_client.update_current_span(
+                    output={"documents": [scrub_text(doc) for doc in docs]},
+                    metadata={"doc_count": len(docs), "feature": feature},
+                )
             prompt = resolve_prompt(
                 langfuse_client,
                 feature=feature,
@@ -71,13 +88,43 @@ class LabAgent:
                 },
                 version=prompt.version,
             )
-            # TODO (CP2): instrument retrieve() and FakeLLM.generate() as child
-            # observations. The nested generation must receive prompt, usage and cost.
-            with propagate_attributes(prompt=prompt.managed_prompt):
-                response = self.llm.generate(prompt.text)
+            with langfuse_client.start_as_current_observation(
+                name="generate-response",
+                as_type="generation",
+                input={"prompt": scrub_text(prompt.text)},
+                model=self.model,
+                prompt=prompt.managed_prompt,
+                metadata={
+                    "prompt_name": prompt.name,
+                    "prompt_label": prompt.label,
+                    "prompt_version": prompt.version,
+                    "prompt_source": prompt.source,
+                },
+            ):
+                with propagate_attributes(prompt=prompt.managed_prompt):
+                    response = self.llm.generate(prompt.text)
+                input_cost = (response.usage.input_tokens / 1_000_000) * 3
+                output_cost = (response.usage.output_tokens / 1_000_000) * 15
+                langfuse_client.update_current_generation(
+                    output={"answer": scrub_text(response.text)},
+                    usage_details={
+                        "input": response.usage.input_tokens,
+                        "output": response.usage.output_tokens,
+                        "total": response.usage.input_tokens + response.usage.output_tokens,
+                    },
+                    cost_details={
+                        "input": input_cost,
+                        "output": output_cost,
+                        "total": input_cost + output_cost,
+                    },
+                )
             quality_score = self._heuristic_quality(message, response.text, docs)
             latency_ms = int((time.perf_counter() - started) * 1000)
             cost_usd = self._estimate_cost(response.usage.input_tokens, response.usage.output_tokens)
+            langfuse_client.update_current_span(
+                output={"answer": scrub_text(response.text)},
+                metadata={"quality_score": quality_score},
+            )
 
         metrics.record_request(
             latency_ms=latency_ms,

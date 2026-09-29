@@ -1,0 +1,8 @@
+Incident Metric Evidence:
+Scenario: Practice rag_slow incident
+Timestamp: 2026-09-29T07:44:10Z to 2026-09-29T07:44:37Z
+Observed Symptoms:
+- Latency P95 spiked from 152 ms to 2653 ms (increase of ~17x).
+- Latency P99 spiked to ~4290 ms.
+- TTFT P95 remained steady at 50-51 ms.
+Conclusion from Metric: Tail latency exploded while time-to-first-token remained unaffected, pinpointing a pre-generation bottleneck (retrieval phase).

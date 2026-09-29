@@ -1,0 +1,77 @@
+[
+  {
+    "service": "api",
+    "payload": {
+      "message_preview": "Email [REDACTED_EMAIL], phone [REDACTED_PHONE_VN], CCCD [REDACTED_CCCD], card [R..."
+    },
+    "event": "request_received",
+    "correlation_id": "req-cafebabe",
+    "model": "claude-sonnet-4-5",
+    "feature": "qa",
+    "session_id": "header-session",
+    "env": "dev",
+    "user_id_hash": "baca1c0416b8",
+    "level": "info",
+    "ts": "2026-09-29T07:26:09.059515Z"
+  },
+  {
+    "service": "api",
+    "payload": {
+      "message_preview": "What is your refund policy? My email is [REDACTED_EMAIL]"
+    },
+    "event": "request_received",
+    "correlation_id": "req-44e9aa50",
+    "model": "claude-sonnet-4-5",
+    "feature": "qa",
+    "session_id": "s01",
+    "env": "dev",
+    "user_id_hash": "2055254ee30a",
+    "level": "info",
+    "ts": "2026-09-29T07:26:10.237093Z"
+  },
+  {
+    "service": "api",
+    "payload": {
+      "message_preview": "Here is my phone [REDACTED_PHONE_VN], what should be logged?"
+    },
+    "event": "request_received",
+    "correlation_id": "req-c909af9a",
+    "model": "claude-sonnet-4-5",
+    "feature": "qa",
+    "session_id": "s05",
+    "env": "dev",
+    "user_id_hash": "64f6ec689229",
+    "level": "info",
+    "ts": "2026-09-29T07:26:10.861734Z"
+  },
+  {
+    "service": "api",
+    "payload": {
+      "message_preview": "What is the policy for PII and credit card [REDACTED_CREDIT_CARD]?"
+    },
+    "event": "request_received",
+    "correlation_id": "req-aae2c3bb",
+    "model": "claude-sonnet-4-5",
+    "feature": "qa",
+    "session_id": "s09",
+    "env": "dev",
+    "user_id_hash": "4d14d5d4f719",
+    "level": "info",
+    "ts": "2026-09-29T07:26:11.490543Z"
+  },
+  {
+    "service": "api",
+    "payload": {
+      "message_preview": "What is your refund policy? My email is [REDACTED_EMAIL]"
+    },
+    "event": "request_received",
+    "env": "dev",
+    "model": "claude-sonnet-4-5",
+    "feature": "qa",
+    "user_id_hash": "2055254ee30a",
+    "correlation_id": "req-dd3c3272",
+    "session_id": "s01",
+    "level": "info",
+    "ts": "2026-09-29T07:36:58.635589Z"
+  }
+]

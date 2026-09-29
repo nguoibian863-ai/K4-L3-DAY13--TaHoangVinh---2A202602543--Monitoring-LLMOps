@@ -1,0 +1,8 @@
+Incident Trace Evidence:
+Correlation ID: req-ecfba8ff
+Matched Trace ID: 49307985bd5a30c7a460693c6d961f7f
+Span Breakdown:
+- retrieve-context: duration ~2500ms (bottleneck identified)
+- generate-response: duration ~150ms (normal)
+Root cause: Artificial delay injected into mock_rag retrieval module during rag_slow incident.
+Fix: Incidents disabled via API POST /incidents/rag_slow/disable.
